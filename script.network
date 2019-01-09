@@ -6,3 +6,7 @@ library(bipartite)
 #Calculate mean number of individuals between sampling rounds
 carab.per.round = read.csv(file = "carab.per.round.csv", header = TRUE, sep = ";")
 mean.carab=aggregate(carab.per.round[,4:ncol(carab.per.round)], list(carab.per.round$trap.code), mean)
+
+#Export and reimport file to add a landscape column
+write.table(mean.carab,file="mean.carab.csv",row.names=T,col.names=T,quote=F,sep=";")
+mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
