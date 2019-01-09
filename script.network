@@ -10,3 +10,7 @@ mean.carab=aggregate(carab.per.round[,3:ncol(carab.per.round)], list(carab.per.r
 #Export and reimport file to add a landscape column
 write.table(mean.carab,file="mean.carab.csv",row.names=T,col.names=T,quote=F,sep=";")
 mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
+mean.carab.habitat<-merge(mean.carab,trap.habitat,  by="trap",all.y = FALSE)
