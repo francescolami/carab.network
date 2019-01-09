@@ -13,4 +13,13 @@ mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
 
 #Merge to add habitat data
 trap.habitat = read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
-mean.carab.habitat<-merge(mean.carab,trap.habitat,  by="trap",all.y = FALSE)
+mean.carab.habitat<-merge(trap.habitat,mean.carab,  by="trap",all.y = FALSE)
+
+#Trying to get NMDS to work
+m.car=mean.carab.habitat
+rownames(m.car)=m.car[,1]
+m.car=m.car[,-(1:3)]
+the.meta=metaMDS(m.car,k=2)
+plot(the.meta)
+orditorp(the.meta,display="species",col="red",air=0.01)
+orditorp(the.meta,display="sites",cex=1.25,air=0.01)
