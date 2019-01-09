@@ -1,0 +1,8 @@
+#load libraries
+library(reshape)
+library(vegan)
+library(bipartite)
+
+#Calculate mean number of individuals between sampling rounds
+carab.per.round = read.csv(file = "carab.per.round.csv", header = TRUE, sep = ";")
+mean.carab=aggregate(carab.per.round[,4:ncol(carab.per.round)], list(carab.per.round$trap.code), mean)
