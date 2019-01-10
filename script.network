@@ -24,13 +24,13 @@ mds=m.car%>%
   distance(method="bray-curtis")%>%
   cmdscale(k=3)%>%
   as_tibble()%>%
-  mutate(groups=mean.carab.habitat$Habitat)
+  mutate(groups=mean.carab.habitat$Macrohabitat)
 colnames(mds)=c("Dim.1","Dim.2","Dim.3","Habitat")
 
 ggscatter(mds,x="Dim.1",y="Dim.2",
           color="Habitat",
-          palette="rainbow",
+          palette=c("darkgreen","red","gold","blue","black","grey","green","sienna1"),
           pch=3,
-          size=1,
+          size=2,
           ellipse=TRUE,
           ellipse.type="confidence")
