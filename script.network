@@ -15,11 +15,22 @@ mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
 trap.habitat = read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
 mean.carab.habitat<-merge(trap.habitat,mean.carab,  by="trap",all.y = FALSE)
 
-#Trying to get NMDS to work
-m.car=mean.carab.habitat
-rownames(m.car)=m.car[,1]
-m.car=m.car[,-(1:3)]
-the.meta=metaMDS(m.car,k=2)
-plot(the.meta)
-orditorp(the.meta,display="species",col="red",air=0.01)
-orditorp(the.meta,display="sites",cex=1.25,air=0.01)
+#NMDS
+library(ggpubr)
+library(dplyr)
+library(ecodist)
+
+mds=m.car%>%
+  distance(method="bray-curtis")%>%
+  cmdscale(k=3)%>%
+  as_tibble()%>%
+  mutate(groups=mean.carab.habitat$Habitat)
+colnames(mds)=c("Dim.1","Dim.2","Dim.3","Habitat")
+
+ggscatter(mds,x="Dim.1",y="Dim.2",
+          color="Habitat",
+          palette="rainbow",
+          pch=3,
+          size=1,
+          ellipse=TRUE,
+          ellipse.type="confidence")
