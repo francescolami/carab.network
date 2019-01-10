@@ -29,7 +29,7 @@ colnames(mds)=c("Dim.1","Dim.2","Dim.3","Habitat")
 
 ggscatter(mds,x="Dim.1",y="Dim.2",
           color="Habitat",
-          palette=c("darkgreen","red","gold","blue","black","grey","green","sienna1"),
+          palette=c("darkgreen","green","lightgreen","blue","orange","yellow","red","lightblue"),
           pch=3,
           size=2,
           ellipse=TRUE,
