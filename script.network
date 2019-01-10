@@ -52,3 +52,9 @@ for (i in 1:length(net.list)){
   net_[[i]]=as.data.frame(networklevel(net.list[[i]][,-c(1:4)]))
   names(net_)=names(net.list)
 }
+
+#Loop to export all of the output at once
+for (i in seq_along(net_)) {
+  filename = paste(names(net_)[i], ".csv")
+  write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
+}
