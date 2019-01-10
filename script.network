@@ -20,6 +20,10 @@ library(ggpubr)
 library(dplyr)
 library(ecodist)
 
+m.car=mean.carab.habitat
+rownames(m.car)=m.car[,1]
+m.car=m.car[,-(1:3)]
+
 mds=m.car%>%
   distance(method="bray-curtis")%>%
   cmdscale(k=3)%>%
