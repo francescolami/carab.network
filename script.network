@@ -49,6 +49,6 @@ rownames(net.list)=net.list[,1]
 net_=list()
 
 for (i in 1:length(net.list)){
-  net_[[i]]=networklevel(net.list[[i]][,-c(1:4)])
+  net_[[i]]=as.data.frame(networklevel(net.list[[i]][,-c(1:4)]))
   names(net_)=names(net.list)
 }
