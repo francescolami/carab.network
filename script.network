@@ -38,3 +38,16 @@ ggscatter(mds,x="Dim.1",y="Dim.2",
           size=2,
           ellipse=TRUE,
           ellipse.type="confidence")
+          
+#Network loop
+library(bipartite)
+
+row.names(mean.carab.habitat)=mean.carab.habitat[,1]
+net.list=split.data.frame(mean.carab.habitat, mean.carab.habitat$landscape)
+rownames(net.list)=net.list[,1]
+
+net_=list()
+
+for (i in 1:length(net.list)){
+  net_[i]=networklevel(net.list$[i][,-c(1:4)])
+}
