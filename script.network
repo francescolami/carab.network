@@ -59,3 +59,15 @@ for (i in seq_along(net_)) {
   filename = paste(names(net_)[i], ".csv")
   write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
 }
+
+#Loop for modularity
+
+mod.list=list()
+mod_=list()
+
+for (i in 1:length(net.list)){
+  mod.list[[i]]=computeModules(net.list[[i]][,-c(1:4)])
+  mod_[[i]]=as.vector(mod.list[[i]]@likelihood)
+}
+
+write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
