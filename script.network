@@ -50,8 +50,9 @@ net_=list()
 
 for (i in 1:length(net.list)){
   net_[[i]]=as.data.frame(networklevel(net.list[[i]][,-c(1:4)]))
-  names(net_)=names(net.list)
 }
+
+names(net_)=names(net.list)
 
 #Loop to export all of the output at once
 for (i in seq_along(net_)) {
