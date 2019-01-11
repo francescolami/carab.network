@@ -22,7 +22,7 @@ library(ecodist)
 
 m.car=mean.carab.habitat
 rownames(m.car)=m.car[,1]
-m.car=m.car[,-(1:3)]
+m.car=m.car[,-(1:4)]
 
 mds=m.car%>%
   distance(method="bray-curtis")%>%
