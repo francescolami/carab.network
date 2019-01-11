@@ -71,3 +71,10 @@ for (i in 1:length(net.list)){
 }
 
 write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
+#Mono-habitat networks
+
+forest=subset(mean.carab.habitat,Macrohabitat=="Forest"| Macrohabitat=="Hedgerow")
+permanent=subset(mean.carab.habitat,Macrohabitat=="Permanent")
+cereal=subset(mean.carab.habitat,Macrohabitat=="Maize"|Macrohabitat=="Winter_cereal")
