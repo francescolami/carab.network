@@ -127,3 +127,37 @@ for (i in 1:length(samples)){
 }
 spp2 # List of habitats in each site with > 1 patch
 
+subnetworks<-list()
+for(n in 1:length(networks_i_sp)){
+  m<-list()
+  for (i in 1:length(spp2[[n]])){
+    m[[i]]<-networks_i_sp[[n]][grep(spp2[[n]][i],rownames(networks_i_sp[[n]])),]
+  }
+  subnetworks[[n]]<-m
+}
+subnetworks # Submatrices i-sp for all species with > individual sampled.
+NULL.networks<-list()
+for(n in 1:length(subnetworks)){
+  null.subnetworks<-list()
+  # Generate 1,000 null i-sp submatrices for each species:
+  for (i in 1:length(subnetworks[[n]])){
+    null.subnetworks[[i]]<-nullmodel(subnetworks[[n]][[i]],N=1000,method=1) # method 1 = Fixed row and column totals.
+    for(j in 1:1000){
+      colnames(null.subnetworks[[i]][[j]])<-colnames(subnetworks[[n]][[i]])
+      rownames(null.subnetworks[[i]][[j]])<-rownames(subnetworks[[n]][[i]])
+    }
+  }
+  null.networks<-list()
+  # Combine null i-sp submatrices to create the complete null i-sp networks
+  for(j in 1:1000){
+    m2<-list()
+    null<-matrix()
+    for (i in 1:length(null.subnetworks)){
+      m2[[i]]<-null.subnetworks[[i]][[j]]
+      null<-do.call(rbind,m2)
+    }
+    null.networks[[j]]<-rbind(m1[[n]],null)
+    null.networks[[j]]<-null.networks[[j]][order(rownames(null.networks[[j]])),]
+  }
+  NULL.networks[[n]]<-null.networks
+}
