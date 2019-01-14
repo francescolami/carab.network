@@ -93,6 +93,14 @@ names(for_)=names(for.list)
 samples = read.csv(file = "samples.csv", header = TRUE, sep = ";")
 samples=split.data.frame(samples, samples$Site)
 
+net.list.round=list()
+
+for (i in 1:length(net.list)){
+  net.list.round[[i]]=ceiling(net.list[[i]][,-c(1:4)])
+}
+
+names(net.list.round)=names(net.list) #rounding numbers for the null models
+
 spp1<-list()
 for (i in 1:length(samples)){
   spp1[[i]]<-as.character(subset(samples[[i]],samples[[i]]$no.ind==1)$Species)
