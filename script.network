@@ -92,6 +92,7 @@ names(for_)=names(for.list)
 
 samples = read.csv(file = "samples.csv", header = TRUE, sep = ";")
 samples=split.data.frame(samples, samples$Site)
+samples=samples[-12] #removes W (but doesn't work either)
 
 for (i in 1:length(net.list)){
   rownames(net.list[[i]])=paste(net.list[[i]][,2],".",net.list[[i]][,1])
@@ -105,6 +106,7 @@ for (i in 1:length(net.list)){
 
 names(net.list.round)=names(net.list) #rounding numbers for the null models
 networks_i_sp=net.list.round
+network_i_sp=networks_i_sp[-12] #removes W (but doesn't work either)
 
 spp1<-list()
 for (i in 1:length(samples)){
