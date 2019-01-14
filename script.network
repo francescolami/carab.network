@@ -75,7 +75,7 @@ for (i in 1:length(net.list)){
 write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
 
 
-#Mono-habitat networks (forest) and null models
+#Mono-habitat networks (forest)
 
 forest=subset(mean.carab.habitat,Macrohabitat=="Forest"| Macrohabitat=="Hedgerow")
 forest=ceiling(forest[,-c(1:4)]) #Round the numbers, for the null models
@@ -87,5 +87,15 @@ for (i in 1:length(for.list)){
 }
 
 names(for_)=names(for.list)
+
+#Null models
+
+net.list.clean=list() # Now I'll remove 0 columns from the original data
+
+for (i in 1:length(net.list)){
+  net.list.clean[[i]]=net.list[[i]][, colSums(net.list[[i]] != 0) > 0]
+}
+
+names(net.list.clean)=names(net.list)
 
 
