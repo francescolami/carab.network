@@ -93,6 +93,10 @@ names(for_)=names(for.list)
 samples = read.csv(file = "samples.csv", header = TRUE, sep = ";")
 samples=split.data.frame(samples, samples$Site)
 
+for (i in 1:length(net.list)){
+  rownames(net.list[[i]])=paste(net.list[[i]][,2],".",net.list[[i]][,1])
+} #change row names so that "grep" function works
+
 net.list.round=list()
 
 for (i in 1:length(net.list)){
@@ -100,6 +104,7 @@ for (i in 1:length(net.list)){
 }
 
 names(net.list.round)=names(net.list) #rounding numbers for the null models
+networks_i_sp=net.list.round
 
 spp1<-list()
 for (i in 1:length(samples)){
@@ -107,4 +112,18 @@ for (i in 1:length(samples)){
 }
 spp1 # List of habitats in each site with only one patch sampled.
 
+m1<-list()
+for(n in 1:length(networks_i_sp)){
+  subnetworks<-list()
+  for (i in 1:length(spp1[[n]])){
+    subnetworks[[i]]<-networks_i_sp[[n]][grep(spp1[[n]][i],rownames(networks_i_sp[[n]])),]
+    m1[[n]]<-do.call(rbind,subnetworks)
+  }
+}
+m1 # Matrices with habitats with only one patch sampled
+spp2<-list()
+for (i in 1:length(samples)){
+  spp2[[i]]<-as.character(subset(samples[[i]],samples[[i]]$no.ind>1)$Species)
+}
+spp2 # List of habitats in each site with > 1 patch
 
