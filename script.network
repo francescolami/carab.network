@@ -99,3 +99,12 @@ for (i in 1:length(net.list)){
 names(net.list.clean)=names(net.list)
 
 
+null.list=list()
+
+for (j in 1:length(net.list.clean){
+  for (i in 1:1000){
+   null.list[[i]]=sample_n(net.list.clean[[j]],nrow(subset(for.list.clean[[j]],Macrohabitat=="Forest"|Macrohabitat=="Hedgerow")),replace=T)
+  }
+}  #first rough attempt, it doesn't work and maybe it doesn't make sense either
+
+
