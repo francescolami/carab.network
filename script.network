@@ -88,23 +88,15 @@ for (i in 1:length(for.list)){
 
 names(for_)=names(for.list)
 
-#Null models
+#Null models (Tur method)
 
-net.list.clean=list() # Now I'll remove 0 columns from the original data
+samples = read.csv(file = "samples.csv", header = TRUE, sep = ";")
+samples=split.data.frame(samples, samples$Site)
 
-for (i in 1:length(net.list)){
-  net.list.clean[[i]]=net.list[[i]][, colSums(net.list[[i]] != 0) > 0]
+spp1<-list()
+for (i in 1:length(samples)){
+  spp1[[i]]<-as.character(subset(samples[[i]],samples[[i]]$no.ind==1)$Species)
 }
-
-names(net.list.clean)=names(net.list)
-
-
-null.list=list()
-
-for (j in 1:length(net.list.clean){
-  for (i in 1:1000){
-   null.list[[i]]=sample_n(net.list.clean[[j]],nrow(subset(for.list.clean[[j]],Macrohabitat=="Forest"|Macrohabitat=="Hedgerow")),replace=T)
-  }
-}  #first rough attempt, it doesn't work and maybe it doesn't make sense either
+spp1 # List of habitats in each site with only one patch sampled.
 
 
