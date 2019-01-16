@@ -163,3 +163,12 @@ for(n in 1:length(subnetworks)){
   }
   NULL.networks[[n]]<-null.networks
 }
+
+
+#Species-habitat networks: calculating the mean for each habitat type
+
+mean.carab.habitat["landscape.habitat"]=paste(mean.carab.habitat$landscape,mean.carab.habitat$Habitat)
+col_idx <- grep("landscape.habitat", names(mean.carab.habitat))
+mean.carab.habitat <- mean.carab.habitat[, c(col_idx, (1:ncol(mean.carab.habitat))[-col_idx])]
+mean.per.habitat=aggregate(mean.carab.habitat[,6:ncol(mean.carab.habitat)], list(mean.carab.habitat$landscape.habitat), mean)
+
