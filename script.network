@@ -106,7 +106,7 @@ for (i in 1:length(net.list)){
 
 names(net.list.round)=names(net.list) #rounding numbers for the null models
 networks_i_sp=net.list.round
-network_i_sp=networks_i_sp[-12] #removes W (but doesn't work either)
+networks_i_sp=networks_i_sp[-12] #removes W (but doesn't work either)
 
 spp1<-list()
 for (i in 1:length(samples)){
