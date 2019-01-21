@@ -164,6 +164,38 @@ for(n in 1:length(subnetworks)){
   NULL.networks[[n]]<-null.networks
 }
 
+#NODF for null networks and obs data (Tur method)
+
+NODF.null<-list()
+for(n in 1:length(NULL.networks)){
+  nodf.null<-c()
+  for(i in 1:length(NULL.networks[[n]])){
+    nodf.null[i]<- nestednodf(NULL.networks[[n]][[i]], weighted=FALSE)$statistic[3]
+  }
+  NODF.null[[n]]<-nodf.null
+}
+NODF.null
+
+NODF<-list()
+for (i in 1:length(networks_i_sp)){
+  NODF[[i]]<-nestednodf(networks_i_sp[[i]], weighted=FALSE)
+}
+NODF
+
+
+praw=list() #raw p value to compare obs and null values
+
+for (i in 1:length(NODF)){
+  praw[[i]]=sum(NODF.null[[i]]>NODF[[i]]$statistic[3])/length(NODF.null[[i]])
+}
+
+names(praw)=names(networks_i_sp)
+
+names(NODF)=names(networks_i_sp)
+names(NODF.null)=names(networks_i_sp)
+
+plot(density(NODF.null$Z),xlim=c(min(NODF$Z$statistic[3],min(NODF.null$Z)),max(NODF$Z$statistic[3],max(NODF.null$Z))),main="Comparison of observed with null model Patefield")
+abline(v=NODF$Z$statistic[3],col="red",lwd=2) #plot network Z
 
 #Species-habitat networks: calculating the mean for each habitat type
 
