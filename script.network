@@ -273,3 +273,20 @@ for (i in 1:length(net.list)){
 }
 
 write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
+#Pollinator script
+
+setwd("C:/Users/utente/Desktop/networks")
+
+#Calculate mean number of individuals between sampling rounds
+pollinators = read.csv(file = "habitat.bees.csv", header = TRUE, sep = ";")
+poll.sum=aggregate(pollinators[,8:ncol(pollinators)], list(pollinators$name), sum)
+
+#Export and reimport file to add a landscape column
+write.table(poll.sum,file="poll.sum.csv",row.names=T,col.names=T,quote=F,sep=";")
+poll.sum = read.csv(file = "poll.sum.1.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "habitat.poll.csv", header = TRUE, sep = ";")
+poll.sum.habitat<-merge(trap.habitat,poll.sum,  by="name",all.y = FALSE)
