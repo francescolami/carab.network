@@ -290,3 +290,26 @@ poll.sum = read.csv(file = "poll.sum.1.csv", header = TRUE, sep = ";")
 #Merge to add habitat data
 trap.habitat = read.csv(file = "habitat.poll.csv", header = TRUE, sep = ";")
 poll.sum.habitat<-merge(trap.habitat,poll.sum,  by="name",all.y = FALSE)
+
+
+#Cicadellidae script
+
+setwd("C:/Users/utente/Desktop/networks")
+
+#Calculate mean number of individuals between sampling rounds
+cicaline = read.csv(file = "cica.per.round.csv", header = TRUE, sep = ";")
+cica.sum=aggregate(cicaline[,5:ncol(cicaline)], list(cicaline$zone), sum)
+
+#Export and reimport file to add a landscape column
+write.table(cica.sum,file="cica.sum.csv",row.names=T,col.names=T,quote=F,sep=";")
+cica.sum = read.csv(file = "cica.sum.1.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "cica.habitat.csv", header = TRUE, sep = ";")
+patch <-unique(trap.habitat[, c("zone", "habitat")])
+cica.sum.habitat<-merge(patch,cica.sum,  by="zone",all.y = FALSE)
+
+
+
+
+
