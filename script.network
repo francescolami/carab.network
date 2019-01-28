@@ -309,7 +309,29 @@ trap.habitat = read.csv(file = "cica.habitat.csv", header = TRUE, sep = ";")
 patch <-unique(trap.habitat[, c("zone", "habitat")])
 cica.sum.habitat<-merge(patch,cica.sum,  by="zone",all.y = FALSE)
 
+#NMDS
+library(ggpubr)
+library(dplyr)
+library(ecodist)
 
+m.car=cica.sum.habitat
+rownames(m.car)=m.car[,1]
+m.car=m.car[,-(1:3)]
+
+mds=m.car%>%
+  distance(method="bray-curtis")%>%
+  cmdscale(k=3)%>%
+  as_tibble()%>%
+  mutate(groups=cica.sum.habitat$habitat)
+colnames(mds)=c("Dim.1","Dim.2","Dim.3","Habitat")
+
+ggscatter(mds,x="Dim.1",y="Dim.2",
+          color="Habitat",
+          palette=c("gold","darkgreen","green","lightblue","red"),
+          pch=3,
+          size=2,
+          ellipse=TRUE,
+          ellipse.type="confidence")
 
 
 
