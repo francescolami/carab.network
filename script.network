@@ -280,7 +280,7 @@ write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
 setwd("C:/Users/utente/Desktop/networks")
 
 #Calculate mean number of individuals between sampling rounds
-pollinators = read.csv(file = "habitat.bees.csv", header = TRUE, sep = ";")
+pollinators = read.csv(file = "habitat.bees.marini.csv", header = TRUE, sep = ";")
 poll.sum=aggregate(pollinators[,8:ncol(pollinators)], list(pollinators$name), sum)
 
 #Export and reimport file to add a landscape column
@@ -289,9 +289,32 @@ poll.sum = read.csv(file = "poll.sum.1.csv", header = TRUE, sep = ";")
 
 #Merge to add habitat data
 trap.habitat = read.csv(file = "habitat.poll.csv", header = TRUE, sep = ";")
-poll.sum.habitat<-merge(trap.habitat,poll.sum,  by="name",all.y = FALSE)
+patch <-unique(trap.habitat[, c("Typ", "name")])
+poll.sum.habitat<-merge(patch,poll.sum,  by="name",all.y = FALSE)
 
+#NMDS
+library(ggpubr)
+library(dplyr)
+library(ecodist)
 
+m.car=poll.sum.habitat
+rownames(m.car)=m.car[,1]
+m.car=m.car[,-(1:3)]
+
+mds=m.car%>%
+  distance(method="bray-curtis")%>%
+  cmdscale(k=3)%>%
+  as_tibble()%>%
+  mutate(groups=poll.sum.habitat$Typ)
+colnames(mds)=c("Dim.1","Dim.2","Dim.3","Habitat")
+
+ggscatter(mds,x="Dim.1",y="Dim.2",
+          color="Habitat",
+          palette=c("lightblue","darkgreen","blue","green","gold","grey"),
+          pch=3,
+          size=2,
+          ellipse=TRUE,
+          ellipse.type="confidence")
 #Cicadellidae script
 
 setwd("C:/Users/utente/Desktop/networks")
