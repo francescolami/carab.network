@@ -501,3 +501,31 @@ for (i in seq_along(net_)) {
 }
 
 
+####Specieslevel (carab)
+
+mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
+mean.carab.habitat<-merge(trap.habitat,mean.carab, by="trap",all.y = FALSE)
+
+#Network loop
+library(bipartite)
+
+row.names(mean.carab.habitat)=mean.carab.habitat[,1]
+net.list=split.data.frame(mean.carab.habitat, mean.carab.habitat$landscape)
+rownames(net.list)=net.list[,1]
+
+net_=list()
+
+for (i in 1:length(net.list)){
+  net_[[i]]=as.data.frame(specieslevel(net.list[[i]][,-c(1:5)],level="higher"))
+}
+
+names(net_)=names(net.list)
+
+#Loop to export all of the output at once
+for (i in seq_along(net_)) {
+  filename = paste(names(net_)[i], ".csv")
+  write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
+}
