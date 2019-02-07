@@ -468,3 +468,36 @@ for (i in 1:length(net.list)){
 
 write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
 
+
+
+####Species-level metrics (Cicadellidae - patch networks)
+
+cica.sum = read.csv(file = "cica.sum.1.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "cica.habitat.csv", header = TRUE, sep = ";")
+patch <-unique(trap.habitat[, c("zone", "habitat")])
+cica.sum.habitat<-merge(patch,cica.sum,  by="zone",all.y = FALSE)
+
+library(bipartite)
+
+row.names(cica.sum.habitat)=cica.sum.habitat[,1]
+net.list=split.data.frame(cica.sum.habitat, cica.sum.habitat$landscape)
+
+
+net_=list()
+
+for (i in 1:length(net.list)){
+  net_[[i]]=as.data.frame(specieslevel(net.list[[i]][,-c(1:3)],level="higher"))
+}
+
+names(net_)=names(net.list)
+
+
+#Loop to export all of the output at once
+for (i in seq_along(net_)) {
+  filename = paste(names(net_)[i], ".csv")
+  write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
+}
+
+
