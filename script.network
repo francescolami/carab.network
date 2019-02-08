@@ -280,7 +280,7 @@ write.table(mod_, "mod.csv",row.names=T,col.names=T,quote=F,sep=";")
 setwd("C:/Users/utente/Desktop/networks")
 
 #Calculate mean number of individuals between sampling rounds
-pollinators = read.csv(file = "habitat.bees.marini.csv", header = TRUE, sep = ";")
+pollinators = read.csv(file = "habitat.bees.central.csv", header = TRUE, sep = ";")
 poll.sum=aggregate(pollinators[,8:ncol(pollinators)], list(pollinators$name), sum)
 
 #Export and reimport file to add a landscape column
