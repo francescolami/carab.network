@@ -285,10 +285,10 @@ poll.sum=aggregate(pollinators[,8:ncol(pollinators)], list(pollinators$name), su
 
 #Export and reimport file to add a landscape column
 write.table(poll.sum,file="poll.sum.csv",row.names=T,col.names=T,quote=F,sep=";")
-poll.sum = read.csv(file = "poll.sum.1.csv", header = TRUE, sep = ";")
+poll.sum = read.csv(file = "poll.sum.central.csv", header = TRUE, sep = ";")
 
 #Merge to add habitat data
-trap.habitat = read.csv(file = "habitat.poll.csv", header = TRUE, sep = ";")
+trap.habitat = read.csv(file = "trap.habitat.central.csv", header = TRUE, sep = ";")
 patch <-unique(trap.habitat[, c("Typ", "name")])
 poll.sum.habitat<-merge(patch,poll.sum,  by="name",all.y = FALSE)
 
