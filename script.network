@@ -664,3 +664,35 @@ rownames(evenness)=nomi
 colnames(evenness)="evar"
 
 write.table(evenness,file="evenness.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
+
+###Calculate evenness (leafhoppers)
+
+
+cica = read.csv(file = "cica.sum.1.csv", header = TRUE, sep = ";")
+cica.sum=aggregate(cica[,3:ncol(cica)], list(cica$landscape), sum)
+
+evenness=as.data.frame(Evar(cica.sum))
+nomi=cica.sum[,1]
+rownames(evenness)=nomi
+colnames(evenness)="evar"
+
+write.table(evenness,file="evenness.cica.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
+
+###Calculate evenness (pollinators)
+
+
+poll = read.csv(file = "poll.sum.central.csv", header = TRUE, sep = ";")
+poll.sum=aggregate(poll[,3:ncol(poll)], list(poll$landscape), sum)
+
+evenness=as.data.frame(Evar(poll.sum))
+nomi=poll.sum[,1]
+rownames(evenness)=nomi
+colnames(evenness)="evar"
+
+write.table(evenness,file="evenness.poll.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
