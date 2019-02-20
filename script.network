@@ -628,3 +628,39 @@ for (i in seq_along(net_)) {
   filename = paste(names(net_)[i], ".csv")
   write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
 }
+
+
+####Evar function
+
+
+Evar<-function(x)   {
+  v<-as.numeric(ncol(x)-1)
+  for(k in 1:nrow(x)) {
+    y<-x[k,2:ncol(x)]
+    a<-as.numeric(ncol(x)-1); b<-a; d<-a
+    for(i in 1:(ncol(x)-1)) {
+      a[i]<-if(y[i]!=0) log(y[i]) else 0 }
+    S<-sum(y>0)
+    for(j in 1:(ncol(x)-1))    {
+      b[j]<-a[[j]]/S}
+    c<-sum(b)
+    for(i in 1:(ncol(x)-1)) {
+      d[i]<-if(y[i]!=0) ((a[[i]]-c)^2/S) else 0 }
+    f<-sum(d)
+    v[k]<-(1-2/pi*atan(f))   }
+  v }
+
+
+
+###Calculate evenness (ground beetles)
+
+
+mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
+carab.sum=aggregate(mean.carab[,3:ncol(mean.carab)], list(mean.carab$landscape), sum)
+
+evenness=as.data.frame(Evar(carab.sum))
+nomi=carab.sum[,1]
+rownames(evenness)=nomi
+colnames(evenness)="evar"
+
+write.table(evenness,file="evenness.csv",row.names=T,col.names=T,quote=F,sep=";")
