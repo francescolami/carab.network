@@ -759,3 +759,24 @@ for (i in seq_along(net_)) {
   write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
 }
 
+
+####specieslevel vs landscape (JUST A POSSIBLE EXAMPLE)
+
+carab=read.csv(file = "specieslevel.carab.habitat.csv", header = TRUE, sep = ";")
+landscape=read.csv(file = "carab.landscape.csv", header = TRUE, sep = ";")
+carab.landscape<-merge(carab,landscape,  by="landscape",all.y = FALSE)
+
+library(nlme)
+library(effects)
+library(car)
+library(visreg)
+library(ggplot2)
+
+mod1<-lme( z~seminat_cover,
+           random=~1|species,
+           na.action=na.omit,
+           data=carab.landscape,
+           method="REML")
+anova(mod1)
+plot(effect("seminat_cover",mod1 ), x.var="seminat_cover",multiline=TRUE)
+
