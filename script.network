@@ -820,7 +820,7 @@ for (i in 1:length(vec_)){
 
 names(rofl_)=names(vec_)
 
-
+rofl_$`33`=rofl_$`33`[ rofl_$`33`>0 ]
 
 #habitat level
 
