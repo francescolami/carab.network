@@ -813,7 +813,7 @@ lmao_=list()
 rofl_=list()
 
 for (i in 1:length(vec_)){
-  lol_[[i]]=apply(vec_[[i]], 1, function(row) all(row !=0 ))
+  lol_[[i]]=apply(vec_[[i]], 1, function(row) all(row !=0 )) ####problem with network 33 here
   lmao_[[i]]=vec_[[i]][lol_[[i]],]
   rofl_[[i]]=lmao_[[i]]$Freq
 }
