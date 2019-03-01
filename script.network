@@ -999,3 +999,48 @@ for (i in seq_along(net_)) {
   filename = paste(names(net_)[i], ".csv")
   write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
 }
+
+
+####### THE FUCKING MODELS #######
+
+
+##### CARABIDAE ######
+
+##### Network level  ######
+
+network.landscape=read.csv(file = "poll.habitat.metrics1500.csv", header = TRUE, sep = ";")
+
+model=lm(H2~seminat_cover*pd, data=network.landscape)
+
+library(car)
+vif(model)
+
+anova(model)
+summary(model)
+plot(network.landscape$pd,network.landscape$H2)
+abline(model)
+
+library(effects)
+ef3 <- effect(term="seminat_cover:pd", x.var="seminat_cover",  xlevels=4, mod=model)
+plot(ef3, multiline=TRUE)
+
+
+####specieslevel #####
+
+carab=read.csv(file = "weighted.habitat.specieslevel.poll.csv", header = TRUE, sep = ";")
+landscape=read.csv(file = "poll.landscape.csv", header = TRUE, sep = ";")
+carab.landscape<-merge(carab,landscape,  by="landscape",all.y = FALSE)
+
+library(nlme)
+library(effects)
+library(car)
+library(visreg)
+library(ggplot2)
+
+mod1<-lme( d~seminat_cover*pd,
+           random=~1|species,
+           na.action=na.omit,
+           data=carab.landscape,
+           method="REML")
+anova(mod1)
+plot(effect("seminat_cover",mod1 ), x.var="seminat_cover",multiline=TRUE)
