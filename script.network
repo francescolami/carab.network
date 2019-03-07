@@ -1044,3 +1044,32 @@ mod1<-lme( d~seminat_cover*pd,
            method="REML")
 anova(mod1)
 plot(effect("seminat_cover",mod1 ), x.var="seminat_cover",multiline=TRUE)
+
+
+###barplot####
+
+lower1=read.csv(file = "carab.patch.lower.metrics.csv", header = TRUE, sep = ";")
+trap.habitat=read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
+lower<-merge(lower1,trap.habitat,  by="trap",all.y = FALSE)
+
+
+myData <- aggregate(lower$species.strength,
+                    by = list(habitat = lower$Macrohabitat),
+                    FUN = function(x) c(mean = mean(x), sd = sd(x),
+                                        n = length(x)))
+myData <- do.call(data.frame, myData)
+myData$se <- myData$x.sd / sqrt(myData$x.n)
+colnames(myData) <- c( "habitat", "mean_strength", "sd", "n", "se")
+
+library(ggplot2)
+
+dodge <- position_dodge(width = 0.9)
+limits <- aes(ymax = myData$mean + myData$se,
+              ymin = myData$mean - myData$se)
+
+p <- ggplot(data = myData, aes(x = habitat, y = mean_strength, fill = habitat))
+
+p + geom_bar(stat = "identity", position = dodge) +
+  geom_errorbar(limits, position = dodge, width = 0.25) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.title.x=element_blank())
