@@ -1073,3 +1073,55 @@ p + geom_bar(stat = "identity", position = dodge) +
   geom_errorbar(limits, position = dodge, width = 0.25) +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
         axis.title.x=element_blank())
+        
+        
+        
+        
+####remove species that are rare within the landscape and among landscapes, plus models#####
+
+mean.carab = read.csv(file = "mean.carab.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "trap.habitat.csv", header = TRUE, sep = ";")
+mean.carab.habitat<-merge(trap.habitat,mean.carab, by="trap",all.y = FALSE)
+
+library(tidyr)
+
+sum.per.habitat=aggregate(mean.carab.habitat[,7:ncol(mean.carab.habitat)], list(mean.carab.habitat$landscape), sum)
+
+gathered=gather(sum.per.habitat,"species","n",-Group.1)
+
+gathered$Group.1 = paste("n", gathered$Group.1, sep = "")
+
+colnames(gathered)[1] <- "landscape"
+
+sp.level=read.csv(file = "specieslevel.carab.patch.csv", header = TRUE, sep = ";")
+
+gathered["landscape.species"]=paste(gathered$landscape,gathered$species)
+sp.level["landscape.species"]=paste(sp.level$landscape,sp.level$species)
+
+
+union<-merge(gathered,sp.level, by="landscape.species",all.y = FALSE)
+
+union2=union[union$n > 3,]
+
+colnames(union2)[2] <- "landscape"
+
+landscape=read.csv(file = "carab.landscape.csv", header = TRUE, sep = ";")
+carab.landscape<-merge(union2,landscape,  by="landscape",all.y = FALSE)
+car=carab.landscape[carab.landscape$species.x %in% names(table(carab.landscape$species.x))[table(carab.landscape$species.x) >= 5],]
+
+library(nlme)
+library(effects)
+library(car)
+library(visreg)
+library(ggplot2)
+
+mod1<-lme( d~seminat_cover*pd,
+           random=~1|species.x,
+           na.action=na.omit,
+           data=car,
+           method="REML")
+anova(mod1)
+plot(effect("seminat_cover",mod1 ), x.var="seminat_cover",multiline=TRUE)
+
