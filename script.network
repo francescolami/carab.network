@@ -1157,3 +1157,34 @@ for (i in 1:length(net.list)){
 names(z)=names(net.list)
 
 write.table(as.data.frame(z),file="h2sig.csv",row.names=T,col.names=T,quote=F,sep=";")
+
+
+#### Loops to calculate significance of other network-level metrics ####
+
+row.names(mean.carab.habitat)=mean.carab.habitat[,1]
+net.list=split.data.frame(mean.carab.habitat, mean.carab.habitat$landscape)
+
+
+mod.list=list()
+mod_=list()
+for (i in 1:length(net.list)){
+  mod.list[[i]]=networklevel(net.list[[i]][,-c(1:3)],index="H2")
+  mod_[[i]]=as.vector(mod.list[[i]])
+}
+
+names(mod_)=names(net.list)
+
+nulls=list()
+mod=mod_
+modules.nulls=list()
+z=list()
+for (i in 1:length(net.list)){
+  nulls[[i]] <- nullmodel(net.list[[i]][,-c(1:3)], N=100, method="r2d")
+  modules.nulls[[i]] <- sapply(nulls[[i]], networklevel,index="H2")
+  z[[i]] <- (mod[[i]] - mean(modules.nulls[[i]]))/sd(modules.nulls[[i]])
+}
+
+names(z)=names(net.list)
+
+write.table(as.data.frame(z),file="h2sig.csv",row.names=T,col.names=T,quote=F,sep=";")
+
