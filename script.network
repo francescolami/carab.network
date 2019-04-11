@@ -1125,3 +1125,35 @@ mod1<-lme( d~seminat_cover*pd,
 anova(mod1)
 plot(effect("seminat_cover",mod1 ), x.var="seminat_cover",multiline=TRUE)
 
+
+#### Loops to calculate modularity significance ####
+
+row.names(mean.carab.habitat)=mean.carab.habitat[,1]
+net.list=split.data.frame(mean.carab.habitat, mean.carab.habitat$landscape)
+
+
+mod.list=list()
+mod_=list()
+for (i in 1:length(net.list)){
+  mod.list[[i]]=computeModules(net.list[[i]][,-c(1:3)])
+  mod_[[i]]=as.vector(mod.list[[i]]@likelihood)
+}
+
+names(mod_)=names(net.list)
+
+
+nulls=list()
+mod=mod_
+modules.nulls=list()
+like.nulls=list()
+z=list()
+for (i in 1:length(net.list)){
+  nulls[[i]] <- nullmodel(net.list[[i]][,-c(1:3)], N=100, method="r2d")
+  modules.nulls[[i]] <- sapply(nulls[[i]], computeModules)
+  like.nulls[[i]] <- sapply(modules.nulls[[i]], function(x) x@likelihood)
+  z[[i]] <- (mod[[i]] - mean(like.nulls[[i]]))/sd(like.nulls[[i]])
+}
+
+names(z)=names(net.list)
+
+write.table(as.data.frame(z),file="h2sig.csv",row.names=T,col.names=T,quote=F,sep=";")
