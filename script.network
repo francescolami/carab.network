@@ -1188,3 +1188,37 @@ names(z)=names(net.list)
 
 write.table(as.data.frame(z),file="h2sig.csv",row.names=T,col.names=T,quote=F,sep=";")
 
+####Loop to add patch abundancies (1 per patch) in the calculations of d####
+
+
+poll.sum = read.csv(file = "poll.sum.central.csv", header = TRUE, sep = ";")
+
+#Merge to add habitat data
+trap.habitat = read.csv(file = "trap.habitat.central.csv", header = TRUE, sep = ";")
+patch <-unique(trap.habitat[, c("Super.Macro", "name")])
+poll.sum.habitat<-merge(patch,poll.sum,  by="name",all.y = FALSE)
+
+
+#Network loop
+library(bipartite)
+
+row.names(poll.sum.habitat)=poll.sum.habitat[,1]
+net.list=split.data.frame(poll.sum.habitat, poll.sum.habitat$landscape)
+rownames(net.list)=net.list[,1]
+
+abundance=list()
+net_=list()
+
+for (i in 1:length(net.list)){
+  abundance[[i]]=rep(1,nrow(net.list[[i]][rowSums(net.list[[i]][,-c(1:3)])>0,]))
+  net_[[i]]=as.data.frame(specieslevel(net.list[[i]][,-c(1:3)],low.abun=abundance[[i]],level="higher"))
+}
+
+names(net_)=names(net.list)
+
+
+#Loop to export all of the output at once
+for (i in seq_along(net_)) {
+  filename = paste(names(net_)[i], ".csv")
+  write.table(net_[[i]], filename,row.names=T,col.names=T,quote=F,sep=";")
+}
